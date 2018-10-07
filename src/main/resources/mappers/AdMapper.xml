@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imall.dao.AdMapper" >
+    <resultMap id="BaseResultMap" type="com.imall.pojo.Ad" >
+        <constructor >
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="ad_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="ad_link" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="ad_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="link_man" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="link_phone" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, ad_name, ad_link, ad_code, link_man, link_phone, create_time, update_time
+    </sql>
+
+
+    <insert id="insert" parameterType="com.imall.pojo.Ad" useGeneratedKeys="true" keyProperty="id">
+        insert into imall_ad (id, ad_name,
+        ad_link, ad_code, link_man,
+        link_phone, create_time, update_time
+        )
+        values (#{id,jdbcType=INTEGER},  #{adName,jdbcType=VARCHAR},
+        #{adLink,jdbcType=VARCHAR}, #{adCode,jdbcType=VARCHAR}, #{linkMan,jdbcType=VARCHAR},
+        #{linkPhone,jdbcType=VARCHAR},   now(),  now()
+        )
+    </insert>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from imall_ad
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from imall_ad
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+
+    <update id="updateByPrimaryKey" parameterType="com.imall.pojo.Ad" >
+        update imall_ad
+        set
+        ad_name = #{adName,jdbcType=VARCHAR},
+        ad_link = #{adLink,jdbcType=VARCHAR},
+        ad_code = #{adCode,jdbcType=VARCHAR},
+        link_man = #{linkMan,jdbcType=VARCHAR},
+        link_phone = #{linkPhone,jdbcType=VARCHAR},
+        update_time =  now()
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from imall_ad
+        ORDER  BY id asc
+    </select>
+
+
+    <select id="selectByAdNameAndAdId" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM imall_ad
+        <where>
+            <if test="adName != null">
+                ad_name like #{adName}
+            </if>
+            <if test="id != null">
+                and id = #{id,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+</mapper>
